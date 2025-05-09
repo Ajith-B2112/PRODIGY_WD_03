@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AJ STOPWATCH | Premium Stopwatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #8e2de2, #4a00e0);
+      --secondary-gradient: linear-gradient(135deg, #11998e, #38ef7d);
+      --danger-gradient: linear-gradient(135deg, #f12711, #f5af19);
+      --dark-gradient: linear-gradient(135deg, #0f0c29, #302b63);
+      --aj-blue: #00a8ff;
+      --aj-dark: #192a56;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+      transition: background-image 1.5s ease-in-out;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
+    }
+
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .stopwatch-container {
+      background: rgba(15, 15, 25, 0.8);
+      padding: 50px 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      width: 450px;
+      max-width: 90%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+      z-index: 1;
+    }
+
+    .stopwatch-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: var(--primary-gradient);
+      z-index: -2;
+      border-radius: 27px;
+      animation: rotate 6s linear infinite;
+    }
+
+    .stopwatch-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 15, 25, 0.8);
+      z-index: -1;
+      border-radius: 25px;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .stopwatch-container:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 35px 60px -10px rgba(0, 0, 0, 0.8);
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, var(--aj-blue), #00d2ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: var(--aj-blue);
+      border-radius: 3px;
+    }
+
+    #display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4rem;
+      font-weight: bold;
+      margin-bottom: 40px;
+      letter-spacing: 3px;
+      text-shadow: 0 0 15px rgba(0, 168, 255, 0.7);
+      position: relative;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent 48%, rgba(0, 168, 255, 0.2) 49%, rgba(0, 168, 255, 0.2) 51%, transparent 52%);
+      background-size: 10px 10px;
+      opacity: 0.5;
+      border-radius: 15px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .controls button {
+      margin: 0;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      background: var(--primary-gradient);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(142, 45, 226, 0.4);
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .controls button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, #4a00e0, #8e2de2);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .controls button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(142, 45, 226, 0.6);
+    }
+
+    .controls button:hover::before {
+      opacity: 1;
+    }
+
+    .controls button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .controls button i {
+      margin-right: 10px;
+      font-size: 1.1rem;
+    }
+
+    #startBtn {
+      background: var(--secondary-gradient);
+      box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+    }
+
+    #startBtn::before {
+      background: linear-gradient(to right, #38ef7d, #11998e);
+    }
+
+    #pauseBtn {
+      background: var(--danger-gradient);
+      box-shadow: 0 8px 25px rgba(241, 39, 17, 0.4);
+    }
+
+    #pauseBtn::before {
+      background: linear-gradient(to right, #f5af19, #f12711);
+    }
+
+    .laps {
+      margin-top: 25px;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .laps::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 95%, rgba(0, 168, 255, 0.1) 100%);
+      pointer-events: none;
+      border-radius: 15px;
+    }
+
+    .laps h3 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      color: #00a8ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+    }
+
+    .laps h3::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--aj-blue);
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+
+    .laps ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .laps li {
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #f1f1f1;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .laps li::before {
+      content: '■';
+      color: var(--aj-blue);
+      margin-right: 10px;
+      font-size: 0.6rem;
+    }
+
+    .laps li:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateX(5px);
+    }
+
+    .laps li span {
+      color: var(--aj-blue);
+      font-weight: bold;
+    }
+
+    .laps ul::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .laps ul::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 168, 255, 0.3);
+      border-radius: 10px;
+    }
+
+    .laps ul::-webkit-scrollbar-track {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 168, 255, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(0, 168, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 168, 255, 0); }
+    }
+
+    .pulse-effect {
+      animation: pulse 2s infinite;
+    }
+
+    .aj-badge {
+      position: absolute;
+      top: -15px;
+      right: 30px;
+      background: var(--aj-blue);
+      color: #000;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+      z-index: 2;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 500px) {
+      .stopwatch-container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      #display {
+        font-size: 3rem;
+        padding: 15px;
+      }
+      
+      .controls button {
+        padding: 12px 20px;
+        min-width: 100px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles" id="particles-js"></div>
+  <div class="stopwatch-container">
+    <div class="aj-badge">AJ EDITION</div>
+    <h1>⏱ AJ STOPWATCH</h1>
+    <div id="display">00:00:00</div>
+    <div class="controls">
+      <button id="startBtn" onclick="startTimer()"><i class="fas fa-play"></i>Start</button>
+      <button id="pauseBtn" onclick="pauseTimer()"><i class="fas fa-pause"></i>Pause</button>
+      <button onclick="resetTimer()"><i class="fas fa-undo"></i>Reset</button>
+      <button onclick="recordLap()"><i class="fas fa-flag"></i>Lap</button>
+    </div>
+    <div class="laps">
+      <h3>Lap Times</h3>
+      <ul id="lapList"></ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Initialize particles.js
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#00a8ff"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 1,
+            "opacity_min": 0.1,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 40,
+            "size_min": 0.1,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#00a8ff",
+          "opacity": 0.2,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 1200
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 140,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 400,
+            "size": 40,
+            "duration": 2,
+            "opacity": 8,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 200,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // Stopwatch functionality
+    let [hours, minutes, seconds] = [0, 0, 0];
+    let timerDisplay = document.getElementById("display");
+    let lapList = document.getElementById("lapList");
+    let interval = null;
+    let isRunning = false;
+    let lapCount = 0;
+    const backgroundImages = [
+      'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+    ];
+
+    function updateDisplay() {
+      let h = hours < 10 ? '0' + hours : hours;
+      let m = minutes < 10 ? '0' + minutes : minutes;
+      let s = seconds < 10 ? '0' + seconds : seconds;
+      timerDisplay.innerText = `${h}:${m}:${s}`;
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      document.getElementById('startBtn').classList.add('pulse-effect');
+      document.getElementById('pauseBtn').classList.remove('pulse-effect');
+      
+      interval = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+        updateDisplay();
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(interval);
+      isRunning = false;
+      document.getElementById('startBtn').classList.remove('pulse-effect');
+      document.getElementById('pauseBtn').classList.add('pulse-effect');
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      [hours, minutes, seconds] = [0, 0, 0];
+      updateDisplay();
+      lapList.innerHTML = '';
+      lapCount = 0;
+      document.getElementById('startBtn').classList.remove('pulse-effect');
+      document.getElementById('pauseBtn').classList.remove('pulse-effect');
+      document.body.style.backgroundImage = `url(${backgroundImages[0]})`;
+    }
+
+    function recordLap() {
+      if (!isRunning) return;
+      
+      lapCount++;
+      let lapTime = timerDisplay.innerText;
+      let lapItem = document.createElement("li");
+      
+      // Create a more sophisticated lap entry
+      lapItem.innerHTML = `
+        <span>LAP ${lapCount}</span>
+        <span>${lapTime}</span>
+      `;
+      
+      // Add animation to new lap
+      lapItem.style.opacity = '0';
+      lapItem.style.transform = 'translateY(20px)';
+      lapList.prepend(lapItem);
+      
+      // Animate the lap entry
+      setTimeout(() => {
+        lapItem.style.transition = 'all 0.4s ease-out';
+        lapItem.style.opacity = '1';
+        lapItem.style.transform = 'translateY(0)';
+      }, 10);
+      
+      // Change background based on lap count
+      if (lapCount <= backgroundImages.length) {
+        document.body.style.backgroundImage = `url(${backgroundImages[lapCount % backgroundImages.length]})`;
+      }
+      
+      // Scroll to top of lap list
+      lapList.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
